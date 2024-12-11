@@ -1,0 +1,128 @@
+
+#include <iostream>
+using namespace std;
+
+const int MAX = 100; // Tamaño maximo de la pila
+int pila[MAX];
+int tope = 0; // Índice de la pila
+bool visitado[11] = { false }; // Maximo de nodos permitido (11 para el tercer grafo)
+
+
+void push(int dato) { // Funcion de la Pila (Ingresar datos)
+    if (tope == MAX) {
+        cout << "Pila llena" << endl;
+    }
+    else {
+        pila[tope] = dato;
+        tope++;
+    }
+}
+
+int pop() { // Funcion de la Pila (Sacar datos)
+    if (tope == 0) {
+        cout << "Pila vacia" << endl;
+        return -1;
+    }
+    else {
+        tope--;
+        return pila[tope];
+    }
+}
+
+// Recorrido en profundidad
+void recorridoprofundidad(int grafo[][11], int limite, int inicio) {
+    for (int i = 0; i < limite; i++) visitado[i] = false; // Reiniciar el array de visitados
+
+    push(inicio); // Agregar el nodo inicial a la pila
+
+    cout << "Recorrido en profundidad (DFS): ";
+    while (tope != 0) {
+        int nodo = pop();
+
+        if (!visitado[nodo]) {
+            visitado[nodo] = true; // Marcar el nodo como visitado
+            cout << nodo + 1 << " "; // Imprimir el nodo (+1 para que los nodos comiencen en 1)
+
+            // Agregar los vecinos del nodo a la pila
+            for (int i = limite - 1; i >= 0; i--) { // LIFO: recorrer en orden inverso
+                if (grafo[nodo][i] == 1 && !visitado[i]) {
+                    push(i);
+                }
+            }
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    int opc, inicio = 0;
+    cout << "Recorrido en Profundidad (DFS)" << endl;
+ 
+    int grafo1[7][11] = {
+        {0, 1, 0, 1, 0, 0, 1},
+        {1, 0, 0, 0, 1, 1, 0},
+        {0, 0, 0, 0, 0, 1, 0},
+        {1, 0, 0, 0, 0, 1, 0},
+        {0, 1, 0, 0, 0, 0, 1},
+        {0, 1, 1, 1, 0, 0, 0},
+        {1, 0, 0, 0, 1, 0, 0}
+    };
+
+    int grafo2[9][11] = {
+        {0, 1, 0, 1, 1, 0, 0, 0, 0},
+        {1, 0, 1, 0, 1, 0, 0, 0, 0},
+        {0, 1, 0, 0, 0, 1, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 1, 0, 0},
+        {1, 1, 0, 0, 0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 1, 1, 0, 0, 1, 0},
+        {0, 0, 0, 0, 0, 0, 1, 0, 1},
+        {0, 0, 0, 0, 0, 0, 0, 1, 0}
+    };
+
+    int grafo3[11][11] = {
+        {0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+        {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+        {0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0},
+        {0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+        {0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0}
+    };
+
+    do {
+        cout << "Escoge el grafo: " << endl;
+        cout << "1: Grafo 1" << endl;
+        cout << "2: Grafo 2" << endl;
+        cout << "3: Grafo 3" << endl;
+        cout << "4: Salir" << endl;
+        cin >> opc;
+
+        cout << "Escribe el inicio del grafo apartir del 1: ";
+        cin >> inicio;
+       
+        switch (opc) {
+        case 1:
+            recorridoprofundidad(grafo1, 7, inicio-1); // DFS en grafo 1
+            break;
+        case 2:
+            recorridoprofundidad(grafo2, 9, inicio-1); // DFS en grafo 2
+            break;
+        case 3:
+            recorridoprofundidad(grafo3, 11, inicio-1); // DFS en grafo 3
+            break;
+        case 4:
+            cout << "Ha salido con exito" << endl;
+            break;
+        default:
+            cout << "Numero incorrecto, vuelve a intentarlo" << endl;
+            break;
+        }
+    } while (opc != 4);
+
+    return 0;
+}
