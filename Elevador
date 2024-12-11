@@ -1,0 +1,68 @@
+#include <iostream>
+using namespace std;
+
+int dividir(float* array, int inicio, int fin){
+	int izq, der;
+	float pibote, temp;
+	pibote = array[inicio];
+	izq = inicio;
+	der = fin;
+
+	while (izq < der) { //Mientras no se cruzen los índices
+		while (array[der] < pibote) {
+			der--;
+		}
+		while ((izq < der) && (array[izq] >= pibote)) {
+			izq++;
+		}
+		if (izq < der) { // Si todavia no se cruzan los indices seguimos intercambiando
+			temp = array[izq];
+			array[izq] = array[der];
+			array[der] = temp;
+		}
+	}
+	
+	temp = array[der];//Se coloca el pivote
+	array[der] = array[inicio];
+	array[inicio] = temp;
+
+	return der;//Posicion de pivote
+}
+
+void quicksort(float* array, int inicio, int fin){
+	int pivote;
+	if (inicio < fin){
+		pivote = dividir(array, inicio, fin);
+		quicksort(array, inicio, pivote - 1);//Ordenamiento
+		quicksort(array, pivote + 1, fin);
+	}
+}
+
+int main() {
+	int k;
+	float peso, contsuma = 0;
+	int cont = 0;
+	cout << "Cuantos kilos maximo puede aguantar el elevador: ";
+	cin >> k;
+
+	cout << "Escribe cuantos objetos/personas suben: ";
+	cin >> peso;
+
+	float* pes = new float[peso]; //Memoria dinamica
+
+	for (int i = 0;i < peso;i++) {//Lee datos
+		cin >> pes[i];
+	}
+	quicksort(pes, 0, peso - 1);
+	cout << endl;
+	for (int i = 0; i < peso; i++) {
+		if (contsuma + pes[i] <= k) { // Verifica que no se pase de peso
+			contsuma += pes[i];
+			cout << pes[i] << endl;
+			cont++;
+		}
+	}
+	cout << endl;
+	cout << cont << endl;
+	delete[] pes;
+}
