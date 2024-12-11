@@ -1,0 +1,73 @@
+#include <iostream>
+using namespace std;
+
+const int MAX = 100; //Tamaño de la matriz
+
+bool tienenum(char matriz[][MAX], int filas, int columnas, int x, int y) {
+    return (x >= 0 && y >= 0 && x < filas && y < columnas && matriz[x][y] == '1');
+}
+
+void Mancha(char matriz[][MAX], int filas, int columnas, int x, int y) {
+    matriz[x][y] = '0'; //Marcamos como Visitada
+
+    int x1[] = { -1, -1, -1, 0, 0, 1, 1, 1 }; // Direcciones Posibles
+    int y1[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+    // Recorremos todas las direcciones
+    for (int i = 0; i < 8; i++) {
+        int nx = x + x1[i];
+        int ny = y + y1[i];
+        if (tienenum(matriz, filas, columnas, nx, ny)) {
+            Mancha(matriz, filas, columnas, nx, ny);
+        }
+    }
+}
+
+// Funcion principal para contar las manchas
+int contarManchas(char matriz[][MAX], int fila, int columna) {
+    int cont = 0;
+    // Se recorre la matriz
+    for (int i = 0; i < fila; i++) {
+        for (int j = 0; j < columna; j++) {
+            // Si encontramos una celda con '1', es una nueva mancha
+            if (matriz[i][j] == '1') {
+                cont++;
+                Mancha(matriz, fila, columna, i, j); // Marcamos toda la mancha
+            }
+        }
+    }
+    return cont;
+}
+void imprimirmatriz(char matriz[][MAX], int fila, int columna){ //Muestra la matriz
+    for (int i = 0; i < fila; i++){
+        for (int j = 0; j < columna; j++){
+            cout << matriz[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int main() {
+    // Matriz 
+    char matriz[MAX][MAX] = {
+{'0', '0', '0', '0', '0', '0', '0', '0', '0', '1'},
+{'1', '0', '0', '0', '0', '0', '0', '1', '0', '0'},
+{'0', '0', '1', '0', '0', '0', '1', '0', '1', '0'},
+{'0', '0', '1', '1', '0', '0', '0', '1', '0', '0'},
+{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0'},
+{'0', '1', '0', '0', '0', '0', '0', '1', '0', '1'},
+{'1', '1', '1', '0', '0', '1', '1', '1', '0', '1'},
+{'0', '1', '0', '1', '0', '1', '1', '0', '0', '1'},
+{'0', '0', '0', '0', '0', '1', '0', '0', '0', '1'},
+{'0', '0', '0', '0', '0', '1', '0', '0', '0', '1'}
+    };
+    //Datos de tamaño de la matriz
+    int fila = 10;
+    int columna = 10;
+    cout << "Visualizacion de la Matriz" << endl;
+    imprimirmatriz(matriz, fila, columna);
+    cout << "Numero de manchas: " << contarManchas(matriz, fila, columna) << endl;
+    cout << "Final de la Matriz" << endl;
+    imprimirmatriz(matriz, fila, columna);
+    return 0;
+}
