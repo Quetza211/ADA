@@ -1,0 +1,49 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+	int n, a, b, c, cont=0;
+
+	cout << "Cuantros litros de refresco quiere: ";
+	cin >> n;
+	if (n>=1 && n<=10000) {
+		cout << "Cuantas botellas quiere de medio litro (1/2): ";
+		cin >> a;
+		cout << "Cuantas botellas quiere de litro 1: ";
+		cin >> b;
+		cout << "Cuantas botellas quiere de 2 litros: ";
+		cin >> c;
+
+		//Algoritmo de fuerza bruta
+		int limitedesol[5000][3]; //Limite de botellas que puede ocupar
+		for (int z = 0; z <= c; z++) { //Botellas de 2 litro(y)
+			for (int y = 0; y <= b; y++) { //Botellas de 1 litros(z)
+				int faltantes = n - (y + 2 * z); // Litros restantes (Va restando 3 en tres)
+				if (faltantes >= 0 ) { //Revisa que sea no haya llegado a 0
+					int x = faltantes * 2; // Convertimos a botellas de 0.5L
+					if (x <= a) {
+						limitedesol[cont][2] = z; // Botellas de 2L
+						limitedesol[cont][1] = y; // Botellas de 1L
+						limitedesol[cont][0] = x; // Botellas de 0.5L
+						cont++;
+						if (cont > 5000) {
+							cout << "Excede el limite de botellas" << endl;
+							exit(0);
+						}
+					}
+				}
+			}
+		}
+
+		if (cont == 0) { //Resultados
+			cout << "0" << endl;
+		}else {
+			for (int i = 0; i < cont; i++) {
+				cout << limitedesol[i][0] << " " << limitedesol[i][1] << " " << limitedesol[i][2] << endl;
+			}
+			cout << cont << endl; // Número de soluciones
+		}
+	}else {
+		cout << "Se alcanzo el maximo limite de refrescos" << endl;
+	}
+}
