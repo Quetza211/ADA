@@ -1,0 +1,134 @@
+#include <iostream>
+using namespace std;
+
+#define MAX 11 // Máximo tamaño de la matriz
+
+int frente = 0, atras = 0, band = 0;
+int cola[100]; // Tamaño de la cola
+bool visitado[MAX] = { false }; // Marca los nodos visitados
+
+void insertar(int dato) { // Para agregar datos a la cola
+    if (frente == atras && band == 1) {
+        cout << "Cola llena" << endl;
+    }
+    else {
+        cola[atras] = dato;
+        atras = (atras + 1) % 100;
+        band = 1;
+    }
+}
+
+int eliminar() { // Eliminar datos de la cola
+    if (frente == atras && band == 0) {
+        cout << "Cola vacía" << endl;
+        return -1;
+    }
+    else {
+        int dato = cola[frente];
+        frente = (frente + 1) % 100;
+        if (frente == atras) {
+            band = 0;
+        }
+        return dato;
+    }
+}
+
+bool cola_vacia() {
+    return (frente == atras && band == 0);
+}
+
+void BFS(int grafo[MAX][MAX], int n, int inicio) { //Recorrido por Anchura
+    for (int i = 0; i < n; i++) { //Se inicializa los nodos como no visitados
+        visitado[i] = false;
+    }
+
+    // Insertar el nodo inicial en la cola y marcarlo como visitado
+    insertar(inicio);
+    visitado[inicio] = true;
+
+    cout << "Recorrido en anchura (BFS): ";
+    while (!cola_vacia()) {
+        int nodo = eliminar();
+        cout << nodo + 1 << " "; // Mostrar el nodo (+1 para que los nodos comiencen en 1)
+
+        // Explorar los vecinos del nodo actual
+        for (int i = 0; i < n; i++) {
+            if (grafo[nodo][i] == 1 && !visitado[i]) {
+                insertar(i); // Agregar el vecino a la cola
+                visitado[i] = true; // Marcar el vecino como visitado
+            }
+        }
+    }
+    cout << endl << endl;
+}
+
+int main() {
+    // Grafos predefinidos
+    int grafo1[7][11] = {
+        {0, 1, 0, 1, 0, 0, 1},
+        {1, 0, 0, 0, 1, 1, 0},
+        {0, 0, 0, 0, 0, 1, 0},
+        {1, 0, 0, 0, 0, 1, 0},
+        {0, 1, 0, 0, 0, 0, 1},
+        {0, 1, 1, 1, 0, 0, 0},
+        {1, 0, 0, 0, 1, 0, 0}
+    };
+
+    int grafo2[9][11] = {
+        {0, 1, 0, 1, 1, 0, 0, 0, 0},
+        {1, 0, 1, 0, 1, 0, 0, 0, 0},
+        {0, 1, 0, 0, 0, 1, 0, 0, 0},
+        {1, 0, 0, 0, 0, 0, 1, 0, 0},
+        {1, 1, 0, 0, 0, 0, 1, 0, 0},
+        {0, 0, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 1, 1, 0, 0, 1, 0},
+        {0, 0, 0, 0, 0, 0, 1, 0, 1},
+        {0, 0, 0, 0, 0, 0, 0, 1, 0}
+    };
+    int grafo3[11][11] = {
+       {0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+       {1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+       {1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+       {1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+       {0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+       {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+       {0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0},
+       {0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1},
+       {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+       {0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+       {0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0}
+    };
+
+    int opc, inicio;
+
+    do {
+        cout << "Selecciona un grafo (1, 2, 3): ";
+        cin >> opc;
+
+        switch (opc) {
+        case 1:
+            cout << "Ingresa el nodo inicial (1 a 7): ";
+            cin >> inicio;
+            BFS(grafo1, 7, inicio - 1); // Se le resta 1 por que inicia en 0
+            break;
+        case 2:
+            cout << "Ingresa el nodo inicial (1 a 9): ";
+            cin >> inicio;
+            BFS(grafo2, 9, inicio - 1);
+            break;
+        case 3:
+            cout << "Ingresa el nodo inicial (1 a 11): ";
+            cin >> inicio;
+            BFS(grafo3, 11, inicio - 1);
+            break;
+        case 4:
+            cout << "Ha salido con Exito ";
+            break;
+        default:
+            cout << "Opción no válida." << endl;
+            break;
+        }
+    } while (opc >= 1 && opc <= 3);
+
+    return 0;
+}
